@@ -19,7 +19,7 @@ mod math;
 mod resize;
 mod nn;
 pub mod nnef;
-mod quant;
+pub mod quant;
 pub mod rec;
 
 pub fn register_all_ops(reg: &mut OnnxOpRegister) {
