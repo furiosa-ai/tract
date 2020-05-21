@@ -8,7 +8,7 @@ mod category_mapper;
 mod logic;
 mod math;
 mod nn;
-mod quant;
+pub mod quant;
 pub mod rec;
 
 pub fn register_all_ops(reg: &mut OnnxOpRegister) {
