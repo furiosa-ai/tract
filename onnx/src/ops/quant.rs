@@ -40,6 +40,11 @@ impl Op for QuantizeLinear {
     not_a_typed_op!();
 }
 
+fn round_to_even(x: f32) -> i32 {
+    use core::arch::x86_64::{_mm_cvtss_si32, _mm_load1_ps};
+    unsafe { _mm_cvtss_si32(_mm_load1_ps(&x)) }
+}
+
 impl StatelessOp for QuantizeLinear {
     fn eval(&self, mut inputs: TVec<Arc<Tensor>>) -> TractResult<TVec<Arc<Tensor>>> {
         let (x, y_scale, y_zero_point) = if self.optional_zero_point_input.is_some() {
@@ -48,18 +53,18 @@ impl StatelessOp for QuantizeLinear {
             let (x, y_scale) = args_2!(inputs);
             (x, y_scale, rctensor0(0u8))
         };
-        let y_scale = y_scale.as_slice::<f32>()?[0].recip();
+        let y_scale = y_scale.as_slice::<f32>()?[0];
         let x = x.cast_to::<f32>()?;
         let tensor = if y_zero_point.datum_type() == u8::datum_type() {
             let y_zero_point = y_zero_point.as_slice::<u8>()?[0];
             x.to_array_view::<f32>()?
-                .map(|x| ((x * y_scale).round() as i32 + y_zero_point as i32).max(0).min(255) as u8)
+                .map(|x| (round_to_even(x / y_scale) + y_zero_point as i32).max(0).min(255) as u8)
                 .into_arc_tensor()
         } else {
             let y_zero_point = y_zero_point.as_slice::<i8>()?[0];
             x.to_array_view::<f32>()?
                 .map(|x| {
-                    ((x * y_scale).round() as i32 + y_zero_point as i32).max(-128).min(127) as i8
+                    (round_to_even(x / y_scale) + y_zero_point as i32).max(-128).min(127) as i8
                 })
                 .into_arc_tensor()
         };
