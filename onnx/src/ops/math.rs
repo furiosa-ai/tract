@@ -4,7 +4,7 @@ use tract_hir::internal::*;
 use tract_hir::ops;
 use tract_hir::ops::binary::Nary;
 
-mod mat_mul_integer;
+pub mod mat_mul_integer;
 
 pub fn register_all_ops(reg: &mut OnnxOpRegister) {
     reg.insert("Add", |_, _| Ok((Box::new(ops::math::add::bin()), vec![])));

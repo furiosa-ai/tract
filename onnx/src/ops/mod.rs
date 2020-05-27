@@ -14,7 +14,7 @@ macro_rules! op_onnx {
 mod array;
 mod category_mapper;
 mod logic;
-mod math;
+pub mod math;
 mod nn;
 pub mod quant;
 pub mod rec;
