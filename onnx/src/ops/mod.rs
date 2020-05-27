@@ -15,7 +15,7 @@ mod array;
 mod cast;
 mod category_mapper;
 mod logic;
-mod math;
+pub mod math;
 mod resize;
 mod nn;
 pub mod nnef;

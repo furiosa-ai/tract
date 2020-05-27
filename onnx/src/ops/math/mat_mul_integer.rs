@@ -105,7 +105,7 @@ pub fn q_linear_mat_mul(
 }
 
 #[derive(Debug, Clone, new, Hash)]
-struct QLinearMatMul;
+pub struct QLinearMatMul;
 
 tract_linalg::impl_dyn_hash!(QLinearMatMul);
 
