@@ -128,7 +128,7 @@ pub fn q_linear_mat_mul(
 }
 
 #[derive(Debug, Clone, new)]
-struct QLinearMatMul;
+pub struct QLinearMatMul;
 
 impl Op for QLinearMatMul {
     fn name(&self) -> Cow<str> {
