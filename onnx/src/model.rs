@@ -151,7 +151,12 @@ impl<'a> ParsingContext<'a> {
         let mut outputs = vec![];
         for output in graph.output.iter() {
             let fact = output.r#type.as_ref().unwrap().value.as_ref().unwrap();
-            let pb::type_proto::Value::TensorType(fact) = fact;
+            let fact = match fact {
+                pb::type_proto::Value::TensorType(fact) => fact,
+                pb::type_proto::Value::MapType(_) | pb::type_proto::Value::SequenceType(_) => {
+                    unimplemented!("{:?}", fact)
+                }
+            };
             outputs.push(outlets_by_name[&*output.name]);
             model.set_outlet_fact(outlets_by_name[&*output.name], fact.try_into()?)?;
         }
