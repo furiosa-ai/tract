@@ -1,5 +1,6 @@
 use crate::model::{OnnxOpRegister, ParsingContext};
 use crate::pb::NodeProto;
+use math::round;
 use tract_hir::internal::*;
 use tract_hir::ops::quant::*;
 
@@ -41,8 +42,7 @@ impl Op for QuantizeLinear {
 }
 
 fn round_to_even(x: f32) -> i32 {
-    use core::arch::x86_64::{_mm_cvtss_si32, _mm_load1_ps};
-    unsafe { _mm_cvtss_si32(_mm_load1_ps(&x)) }
+    round::half_to_even(f64::from(x), 0) as i32
 }
 
 impl StatelessOp for QuantizeLinear {
