@@ -87,13 +87,13 @@ impl QParams {
 }
 
 pub fn quantize_linear_f32_u8(x: f32, scale: f32, zero_point: i32) -> u8 {
-    (((x * scale).round() as i32) + zero_point as i32)
+    ((math::round::half_to_even(f64::from(x * scale), 0) as i32) + zero_point as i32)
         .max(u8::min_value() as i32)
         .min(u8::max_value() as i32) as u8
 }
 
 pub fn quantize_linear_f32_i8(x: f32, scale: f32, zero_point: i32) -> i8 {
-    (((x * scale).round() as i32) + zero_point as i32)
+    ((math::round::half_to_even(f64::from(x * scale), 0) as i32) + zero_point as i32)
         .max(i8::min_value() as i32)
         .min(i8::max_value() as i32) as i8
 }
